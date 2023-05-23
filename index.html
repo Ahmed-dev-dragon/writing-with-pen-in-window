@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Futuristic Drawing Canvas</title>
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background: linear-gradient(45deg, #05032D, #1C467F);
+      }
+      .canvas-container {
+          border: 2px solid #1C467F;
+          border-radius: 10px;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      canvas {
+          border: 1px solid #1C467F;
+          border-radius: 5px;
+          cursor: crosshair;
+      }
+      .tools {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+      .colors {
+          display: flex;
+          gap: 5px;
+      }
+      .color-option {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: 1px solid #1C467F;
+          cursor: pointer;
+      }
+      .btn {
+          border: none;
+          outline: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          background: #1C467F;
+          color: #fff;
+          font-size: 14px;
+          cursor: pointer;
+          transition: 0.3s;
+      }
+      .btn:hover {
+          background: #2F71CB;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <div class="tools">
+        <div class="colors">
+          <div
+            class="color-option"
+            style="background: #000"
+            data-color="#000"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #f00"
+            data-color="#f00"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #0f0"
+            data-color="#0f0"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #00f"
+            data-color="#00f"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #ff0"
+            data-color="#ff0"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #0ff"
+            data-color="#0ff"
+          ></div>
+          <div
+            class="color-option"
+            style="background: #f0f"
+            data-color="#f0f"
+          ></div>
+        </div>
+        <button class="btn" id="saveBtn">Save & Download</button>
+      </div>
+      <canvas id="drawingCanvas" width="800" height="400"></canvas>
+    </div>
+    <script>
+      const canvas = document.getElementById('drawingCanvas');
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+      let color = '#000';
+
+      canvas.addEventListener('mousedown', e => {
+          isDrawing = true;
+          ctx.beginPath();
+          ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+      });
+      canvas.addEventListener('mousemove', e => {
+          if (isDrawing) {
+              ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+              ctx.stroke();
+          }
+      });
+      canvas.addEventListener('mouseup', () => {
+          isDrawing = false;
+      });
+      canvas.addEventListener('mouseleave', () => {
+          isDrawing = false;
+      });
+
+      document.querySelectorAll('.color-option').forEach(option => {
+          option.addEventListener('click', () => {
+              color = option.dataset.color;
+              ctx.strokeStyle = color;
+              ctx.lineWidth = 5;
+              ctx.lineCap = 'round';
+              ctx.lineJoin = 'round';
+          });
+      });
+
+      document.getElementById('saveBtn').addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = 'drawing.png';
+          link.href = canvas.toDataURL();
+          link.click();
+      });
+    </script>
+  </body>
+</html>
